@@ -1,0 +1,41 @@
+- hosts: centos
+  tasks:
+
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Install Apache
+    yum:
+      name: httpd
+      state: latest 
+
+  - name: Start service httpd
+    service:
+      name: httpd
+      state: started  
+
+      enabled: yes
+
+  - name: Download foo.conf
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page294/woody.zip
+      dest: /etc/foo.conf
+      mode: '0440'
+
+  - name: install unzip
+    yum:  
+      name: unzip
+      state: present 
+
+  - name: Extract template into /var/www/html
+    unarchive:
+      src: /etc/foo.conf
+      dest: /var/www/html
+      remote_src: yes
+
+  - name: Recursive change ownership or directory
+    file:
+       path: /var/www/html
+       state: directory
+       recurse: yes                                                                                    
